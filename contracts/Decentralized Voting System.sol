@@ -131,8 +131,8 @@ contract DecentralizedVotingSystem {
         string memory winner = "";
         
         for (uint256 i = 1; i <= totalCandidates; i++) {
-            candidateNames[i-1] = candidates[i].name;
-            voteCounts[i-1] = candidates[i].voteCount;
+            candidateNames[i - 1] = candidates[i].name;
+            voteCounts[i - 1] = candidates[i].voteCount;
             
             if (candidates[i].voteCount > maxVotes) {
                 maxVotes = candidates[i].voteCount;
@@ -142,6 +142,30 @@ contract DecentralizedVotingSystem {
         }
         
         return (candidateNames, voteCounts, winnerId, winner);
+    }
+
+    // 🔹 New Function: Get current winner
+    function getWinner() external view returns (
+        uint256 winnerId,
+        string memory winnerName,
+        uint256 winnerVoteCount
+    ) {
+        require(totalCandidates > 0, "No candidates available");
+
+        uint256 maxVotes = 0;
+        uint256 currentWinnerId = 0;
+
+        for (uint256 i = 1; i <= totalCandidates; i++) {
+            if (candidates[i].voteCount > maxVotes) {
+                maxVotes = candidates[i].voteCount;
+                currentWinnerId = i;
+            }
+        }
+
+        require(currentWinnerId != 0, "No votes cast yet");
+
+        Candidate memory winner = candidates[currentWinnerId];
+        return (winner.id, winner.name, winner.voteCount);
     }
     
     function toggleVotingStatus() external onlyOwner {
@@ -180,3 +204,11 @@ contract DecentralizedVotingSystem {
         return (electionTitle, totalCandidates, totalVotes, votingActive);
     }
 }
+        uint256 candidateCount,
+        uint256 voteCount,
+        bool status
+    ) {
+        return (electionTitle, totalCandidates, totalVotes, votingActive);
+    }
+}
+// Added one function suggested by Chatgpt 
